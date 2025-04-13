@@ -21,7 +21,7 @@ class Config(object):
     TG_MAX_FILE_SIZE = 4194304000
     FREE_USER_MAX_FILE_SIZE = 4194304000
     # default thumbnail to be used in the videos
-    DEF_THUMB_NAIL_VID_S = get_config("DEF_THUMB_NAIL_VID_S", "https://telegra.ph/file/30800c85ab730c3858b90-7f542ebcc15db4dd56.jpg")
+    DEF_THUMB_NAIL_VID_S = get_config("DEF_THUMB_NAIL_VID_S", "https://envs.sh/Lda.jpg")
     # proxy for accessing youtube-dl in GeoRestricted Areas
     # Get your own proxy from https://github.com/rg3/youtube-dl/issues/1091#issuecomment-230163061
     HTTP_PROXY = get_config("HTTP_PROXY", None)
