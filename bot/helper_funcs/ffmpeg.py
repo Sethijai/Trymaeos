@@ -116,6 +116,19 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
             return None
 
         output_file = os.path.join(output_directory, out_name)
+
+        # Delay and check file size after encoding
+        for _ in range(5):  # Try 5 times with a 1-second delay
+            if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
+                break
+            time.sleep(1)
+        else:
+            LOGGER.error(f"Encoded file not ready: {output_file}")
+            return None
+
+        # Check for the output file path with repr()
+        LOGGER.info(f"Output file path: {repr(output_file)}")
+
         return output_file if os.path.exists(output_file) else None
 
     except Exception as e:
