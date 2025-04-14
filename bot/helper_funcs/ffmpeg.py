@@ -74,41 +74,38 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
 
         # Monitor progress
         while True:
-    await asyncio.sleep(3)
+            await asyncio.sleep(3)
 
-    if os.path.exists(progress):
-        with open(progress, 'r') as f:
-            text = f.read()
-            # parse progress and update
-
-    if process.returncode is not None:
-        break
             if os.path.exists(progress):
                 with open(progress, 'r') as f:
                     text = f.read()
-                    frame = re.findall("frame=(\d+)", text)
-                    time_in_us = re.findall("out_time_ms=(\d+)", text)
-                    speed = re.findall("speed=(\d+\.?\d*)", text)
 
-                    if frame and time_in_us and speed:
-                        elapsed_time = int(time_in_us[-1]) / 1_000_000
-                        percentage = min(100, math.floor(elapsed_time * 100 / total_time))
+                frame = re.findall("frame=(\d+)", text)
+                time_in_us = re.findall("out_time_ms=(\d+)", text)
+                speed = re.findall("speed=(\d+\.?\d*)", text)
 
-                        progress_str = f"📈 <b>Progress:</b> {percentage}%\n" \
-                                       f"[{FINISHED_PROGRESS_STR * (percentage // 10)}{UN_FINISHED_PROGRESS_STR * (10 - percentage // 10)}]"
-                        stats = f"<blockquote>🗳 <b>Encoding in Progress</b>\n\n" \
-                                f"⌚ <b>Time Left:</b> {TimeFormatter((total_time - elapsed_time) * 1000)}\n\n" \
-                                f"{progress_str}\n</blockquote>"
+                if frame and time_in_us and speed:
+                    elapsed_time = int(time_in_us[-1]) / 1_000_000
+                    percentage = min(100, math.floor(elapsed_time * 100 / total_time))
 
-                        try:
-                            await message.edit_text(
-                                text=stats,
-                                reply_markup=InlineKeyboardMarkup(
-                                    [[InlineKeyboardButton('❌ Cancel ❌', callback_data='fuckingdo')]]
-                                )
+                    progress_str = f"📈 <b>Progress:</b> {percentage}%\n" \
+                                   f"[{FINISHED_PROGRESS_STR * (percentage // 10)}{UN_FINISHED_PROGRESS_STR * (10 - percentage // 10)}]"
+                    stats = f"<blockquote>🗳 <b>Encoding in Progress</b>\n\n" \
+                            f"⌚ <b>Time Left:</b> {TimeFormatter((total_time - elapsed_time) * 1000)}\n\n" \
+                            f"{progress_str}\n</blockquote>"
+
+                    try:
+                        await message.edit_text(
+                            text=stats,
+                            reply_markup=InlineKeyboardMarkup(
+                                [[InlineKeyboardButton('❌ Cancel ❌', callback_data='fuckingdo')]]
                             )
-                        except Exception as e:
-                            LOGGER.error(f"Error updating progress: {e}")
+                        )
+                    except Exception as e:
+                        LOGGER.error(f"Error updating progress: {e}")
+
+            if process.returncode is not None:
+                break
 
         stdout, stderr = await process.communicate()
         LOGGER.info(f"FFmpeg stdout: {stdout.decode().strip()}")
