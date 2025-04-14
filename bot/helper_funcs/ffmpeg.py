@@ -3,7 +3,6 @@ import asyncio
 import os
 import time
 import re
-import json
 import subprocess
 import math
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -51,7 +50,8 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         ffmpeg_command = [
             "ffmpeg",
             "-hide_banner",
-            "-loglevel", "error",
+            "-loglevel", "info",  # Set to 'info' for better FFmpeg logging
+            "-progress", progress,  # Write progress to file
             "-i", video_file,
             "-c:v", codec[0],
             "-crf", crf[0],
@@ -75,7 +75,9 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         LOGGER.info(f"FFmpeg process started with PID: {process.pid}")
 
         # Monitor progress
-        while process.returncode is None:
+        while True:
+            if process.returncode is not None:
+                break
             await asyncio.sleep(3)
             if os.path.exists(progress):
                 with open(progress, 'r') as f:
