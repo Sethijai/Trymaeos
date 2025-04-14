@@ -35,7 +35,6 @@ def sanitize_filename(filename):
 async def convert_video(video_file, output_directory, total_time, bot, message, chan_msg):
     """Convert video using FFmpeg."""
     try:
-        # Sanitize file name
         kk = video_file.split("/")[-1]
         aa = kk.split(".")[-1]
         out_put_file_name = sanitize_filename(kk.replace(f".{aa}", "[Encoded].mkv"))
@@ -43,6 +42,10 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         progress = os.path.join(output_directory, "progress.txt")
         with open(progress, 'w') as f:
             pass
+
+        # Sanitize resolution
+        safe_resolution = resolution[0].replace("×", "x")
+        LOGGER.info(f"Using resolution: {safe_resolution}")
 
         # FFmpeg command
         ffmpeg_command = [
@@ -52,11 +55,11 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
             "-i", video_file,
             "-c:v", codec[0],
             "-crf", crf[0],
-            "-s", resolution[0],
+            "-s", safe_resolution,
             "-preset", preset[0],
             "-c:a", "libopus",
             "-b:a", audio_b[0],
-            "-y",  # Overwrite output file
+            "-y",
             os.path.join(output_directory, out_put_file_name)
         ]
 
@@ -112,10 +115,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
             return None
 
         output_file = os.path.join(output_directory, out_put_file_name)
-        if os.path.exists(output_file):
-            return output_file
-        else:
-            return None
+        return output_file if os.path.exists(output_file) else None
 
     except Exception as e:
         LOGGER.error(f"Error in convert_video: {e}")
@@ -145,18 +145,13 @@ async def media_info(saved_file_path):
         total_seconds = (hours * 60 * 60) + (minutes * 60) + seconds
     else:
         total_seconds = None
-    if bitrates is not None:
-        bitrate = bitrates.group(1)
-    else:
-        bitrate = None
+    bitrate = bitrates.group(1) if bitrates else None
     return total_seconds, bitrate
 
 async def take_screen_shot(video_file, output_directory, ttl):
     """Take a screenshot from the video."""
-    out_put_file_name = os.path.join(
-        output_directory,
-        str(time.time()) + ".jpg"
-    )
+    out_put_file_name = os.path.join(output_directory, str(time.time()) + ".jpg")
+
     if video_file.upper().endswith(("MKV", "MP4", "WEBM")):
         file_genertor_command = [
             "ffmpeg",
@@ -175,10 +170,5 @@ async def take_screen_shot(video_file, output_directory, ttl):
             stderr=asyncio.subprocess.PIPE,
         )
         stdout, stderr = await process.communicate()
-        e_response = stderr.decode().strip()
-        t_response = stdout.decode().strip()
 
-    if os.path.lexists(out_put_file_name):
-        return out_put_file_name
-    else:
-        return None
+    return out_put_file_name if os.path.lexists(out_put_file_name) else None
