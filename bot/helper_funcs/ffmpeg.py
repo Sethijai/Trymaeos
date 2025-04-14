@@ -74,10 +74,15 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
 
         # Monitor progress
         while True:
-            if process.poll() is not None:
-                break
-            await asyncio.sleep(3)
+    await asyncio.sleep(3)
 
+    if os.path.exists(progress):
+        with open(progress, 'r') as f:
+            text = f.read()
+            # parse progress and update
+
+    if process.returncode is not None:
+        break
             if os.path.exists(progress):
                 with open(progress, 'r') as f:
                     text = f.read()
