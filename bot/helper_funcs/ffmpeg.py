@@ -6,7 +6,7 @@ import re
 import subprocess
 import math
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.helper_funcs.display_progress import TimeFormatter
+from bot.helper_funcs.display_progress import TimeFormatter, humanbytes, progress_for_pyrogram
 from bot.localisation import Localisation
 from bot import (
     FINISHED_PROGRESS_STR,
@@ -27,17 +27,16 @@ logging.basicConfig(
 )
 LOGGER = logging.getLogger(__name__)
 
+
 def sanitize_filename(filename):
-    """Sanitize file names by replacing special characters and spaces."""
     return re.sub(r'[^\w\-_.]', '_', filename)
 
+
 async def convert_video(video_file, output_directory, total_time, bot, message, chan_msg):
-    """Convert video using FFmpeg."""
     try:
         filename = os.path.basename(video_file)
         extension = filename.split(".")[-1]
         out_name = sanitize_filename(filename.replace(f".{extension}", "[Encoded].mkv"))
-
         progress = os.path.join(output_directory, "progress.txt")
         with open(progress, 'w') as f:
             pass
@@ -72,10 +71,8 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         pid_list.insert(0, process.pid)
         LOGGER.info(f"FFmpeg process started with PID: {process.pid}")
 
-        # Monitor progress
         while True:
             await asyncio.sleep(3)
-
             if os.path.exists(progress):
                 with open(progress, 'r') as f:
                     text = f.read()
@@ -117,8 +114,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
 
         output_file = os.path.join(output_directory, out_name)
 
-        # Delay and check file size after encoding
-        for _ in range(5):  # Try 5 times with a 1-second delay
+        for _ in range(5):
             if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
                 break
             time.sleep(1)
@@ -126,8 +122,9 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
             LOGGER.error(f"Encoded file not ready: {output_file}")
             return None
 
-        # Check for the output file path with repr()
         LOGGER.info(f"Output file path: {repr(output_file)}")
+
+        await upload_to_telegram(bot, message.chat.id, output_file, message)
 
         return output_file if os.path.exists(output_file) else None
 
@@ -135,15 +132,10 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         LOGGER.error(f"Error in convert_video: {e}")
         return None
 
+
 async def media_info(saved_file_path):
-    """Get media information using FFmpeg."""
     process = subprocess.Popen(
-        [
-            'ffmpeg',
-            "-hide_banner",
-            '-i',
-            saved_file_path
-        ],
+        ['ffmpeg', "-hide_banner", '-i', saved_file_path],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
     )
@@ -162,8 +154,8 @@ async def media_info(saved_file_path):
 
     return total_seconds, bitrate.group(1) if bitrate else None
 
+
 async def take_screen_shot(video_file, output_directory, ttl):
-    """Take a screenshot from the video."""
     output_file = os.path.join(output_directory, str(time.time()) + ".jpg")
 
     if video_file.upper().endswith(("MKV", "MP4", "WEBM")):
@@ -174,7 +166,6 @@ async def take_screen_shot(video_file, output_directory, ttl):
             "-vframes", "1",
             output_file
         ]
-
         process = await asyncio.create_subprocess_exec(
             *cmd,
             stdout=asyncio.subprocess.PIPE,
@@ -183,3 +174,21 @@ async def take_screen_shot(video_file, output_directory, ttl):
         await process.communicate()
 
     return output_file if os.path.exists(output_file) else None
+
+
+async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
+    try:
+        sent_msg = await bot.send_document(
+            chat_id=chat_id,
+            document=file_path,
+            caption=f"<b>Upload Finished:</b> {os.path.basename(file_path)}\n<b>Size:</b> {humanbytes(os.path.getsize(file_path))}",
+            progress=progress_for_pyrogram,
+            progress_args=(
+                "Uploading...",
+                reply_msg
+            )
+        )
+        return sent_msg
+    except Exception as e:
+        LOGGER.error(f"Upload failed: {e}")
+        await reply_msg.edit_text(f"❌ Upload failed!\n\n{e}")
