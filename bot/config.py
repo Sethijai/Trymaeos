@@ -5,9 +5,9 @@ class Config(object):
     SESSION_NAME = get_config("SESSION_NAME", "EncoderX") 
     # EncoderX_bot....
     # sucks Dude
-    APP_ID = int(get_config("APP_ID", "26387127"))
-    API_HASH = get_config("API_HASH", "19718ab7acd97d0f71ada2807ddfe47a")
-    LOG_CHANNEL = get_config("LOG_CHANNEL", "-1002432275758")
+    APP_ID = int(get_config("APP_ID", "22403100"))
+    API_HASH = get_config("API_HASH", "ccbc3f662735abfa604ef6309ba76e67")
+    LOG_CHANNEL = get_config("LOG_CHANNEL", "--1002432275758")
     UPDATES_CHANNEL = get_config("UPDATES_CHANNEL", None) # Without `@` LOL
      # Get these values from my.telegram.org
     AUTH_USERS = [7950514048]
