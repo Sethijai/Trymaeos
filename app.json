@@ -1,17 +1,17 @@
 {
-  "name": "UltronEncoderBot",
-  "description": "Telegram's best Video Encoder Bot",
-  "logo": "https://telegra.ph/file/0e369e097843b0dc4b771.jpg",
+  "name": "VideoCompressBot",
+  "description": "Telegram's best Video Compress Bot",
+  "logo": "https://graph.org/file/47d25d9ba84e13d958d2d.jpg",
   "keywords": [
     "telegram",
     "best",
     "video",
-    "Encoder",
+    "compress",
     "bot"
   ],
   "success_url": "https://t.me/linux_repo",
   "website": "https://t.me/Discovery_Updates",
-  "repository": "https://github.com/GitXBot101/GroupEncoder",
+  "repository": "https://github.com/AbirHasan2005/VideoCompress",
   "env": {
     "ENV": {
       "description": "Setting this to ANYTHING will enable VARs when in ENV mode",
@@ -19,37 +19,37 @@
     },
     "SESSION_NAME": {
       "description": "Keep this default",
-      "value": "UltronEncoderBot",
+      "value": "AHCompressBot",
       "required": true
     },
     "TG_BOT_TOKEN": {
       "description": "Your bot token, as a string. Get this from @BotFather",
-      "value": "",
+      "value": "7428255264:AAEzqBwrx25YXlz5w_BQ7eXLZCW5zKqeeJ8",
       "required": true
     },
     "APP_ID": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "",
+      "value": "24122570",
       "required": true
     },
     "API_HASH": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "",
+      "value": "33bbfdf4cbc5dedc27257d1d3934e42a",
       "required": true
     },
     "BOT_USERNAME": {
       "description": "Your Bot Username. Without `@` before Username!",
-      "value": "",
+      "value": "MyDemo_4_Robot",
       "required": true
     },
     "LOG_CHANNEL": {
       "description": "Your Bot's Log Channel's Username. For Help ask in @linux_repo",
-      "value": "RulfEncoderLogs",
+      "value": "CompressorTeamLogs",
       "required": true
     },
     "AUTH_USERS": {
       "description": "Allow only pre-defined users to use this bot as Sudo User. Separate with Space. Just for using Admin Commands.",
-      "value": "5179011789",
+      "value": "8181241262, -1002833051403",
       "required": true
     }
   },
