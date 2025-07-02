@@ -24,22 +24,22 @@
     },
     "TG_BOT_TOKEN": {
       "description": "Your bot token, as a string. Get this from @BotFather",
-      "value": "7428255264:AAEzqBwrx25YXlz5w_BQ7eXLZCW5zKqeeJ8",
+      "value": "8159082003:AAF2pglO6WviJGvsPN5yl9C_7F8KratAw-A",
       "required": true
     },
     "APP_ID": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "24122570",
+      "value": "22182189",
       "required": true
     },
     "API_HASH": {
       "description": "Get this value from https://my.telegram.org",
-      "value": "33bbfdf4cbc5dedc27257d1d3934e42a",
+      "value": "5e7c4088f8e23d0ab61e29ae11960bf5",
       "required": true
     },
     "BOT_USERNAME": {
       "description": "Your Bot Username. Without `@` before Username!",
-      "value": "MyDemo_4_Robot",
+      "value": "Compressor720p_Bot",
       "required": true
     },
     "LOG_CHANNEL": {
