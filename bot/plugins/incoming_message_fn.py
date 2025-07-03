@@ -208,8 +208,8 @@ async def incoming_compress_message_f(update):
         document=o,
         caption=caption,
         force_document=True,
-        #duration=duration,
-        thumb="thumb.jpg",
+        duration=duration,
+        thumb=thumb_image_path,
         reply_to_message_id=update.id,
         progress=progress_for_pyrogram,
         progress_args=(
