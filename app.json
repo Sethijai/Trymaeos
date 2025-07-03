@@ -24,7 +24,7 @@
     },
     "TG_BOT_TOKEN": {
       "description": "Your bot token, as a string. Get this from @BotFather",
-      "value": "8159082003:AAF2pglO6WviJGvsPN5yl9C_7F8KratAw-A",
+      "value": "8000239655:AAFe7RobzJyaSsLjbvpsYpMD-pl-l1GKJog",
       "required": true
     },
     "APP_ID": {
@@ -39,7 +39,7 @@
     },
     "BOT_USERNAME": {
       "description": "Your Bot Username. Without `@` before Username!",
-      "value": "Compressor720p_Bot",
+      "value": "Compressor480p_Bot",
       "required": true
     },
     "LOG_CHANNEL": {
