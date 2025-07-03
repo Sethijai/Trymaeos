@@ -124,6 +124,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
 
         LOGGER.info(f"Output file path: {repr(output_file)}")
 
+        # Fix: Pass the correct arguments to upload_to_telegram
         await upload_to_telegram(bot, message.chat.id, output_file, message)
 
         return output_file if os.path.exists(output_file) else None
@@ -177,18 +178,34 @@ async def take_screen_shot(video_file, output_directory, ttl):
 
 
 async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
+    """Fixed upload function with proper progress callback arguments"""
     try:
+        # Get file size for progress tracking
+        file_size = os.path.getsize(file_path)
+        start_time = time.time()
+        
+        LOGGER.info(f"Starting upload of {file_path} (Size: {humanbytes(file_size)})")
+        
         sent_msg = await bot.send_document(
             chat_id=chat_id,
             document=file_path,
-            caption=f"<b>Upload Finished:</b> {os.path.basename(file_path)}\n<b>Size:</b> {humanbytes(os.path.getsize(file_path))}",
+            caption=f"<b>Upload Finished:</b> {os.path.basename(file_path)}\n<b>Size:</b> {humanbytes(file_size)}",
             progress=progress_for_pyrogram,
             progress_args=(
-                "Uploading...",
-                reply_msg
+                bot,           # bot instance
+                "Uploading...", # ud_type
+                reply_msg,     # message
+                start_time     # start time
             )
         )
+        
+        LOGGER.info(f"Upload completed successfully")
         return sent_msg
+        
     except Exception as e:
         LOGGER.error(f"Upload failed: {e}")
-        await reply_msg.edit_text(f"❌ Upload failed!\n\n{e}")
+        try:
+            await reply_msg.edit_text(f"❌ Upload failed!\n\n{str(e)}")
+        except:
+            pass
+        return None
