@@ -27,11 +27,8 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
     pip3 install --no-cache-dir -r requirements.txt
 
 # Copy only necessary files
-COPY start.sh .
-COPY app/ ./app/  # Adjust based on your project structure
-
+COPY . .
 # Make start.sh executable
-RUN chmod +x start.sh
 
 # Expose port if needed (uncomment and set appropriate port)
 # EXPOSE 8080
