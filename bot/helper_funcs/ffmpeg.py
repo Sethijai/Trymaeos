@@ -36,7 +36,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
     try:
         filename = os.path.basename(video_file)
         extension = filename.split(".")[-1]
-        out_name = sanitize_filename(filename.replace(f".{extension}", "[Encoded].mkv"))
+        out_name = sanitize_filename(filename.replace(f".{extension}", "[480p].mkv"))
         progress = os.path.join(output_directory, "progress.txt")
         with open(progress, 'w') as f:
             pass
@@ -184,7 +184,7 @@ async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
         sent_msg = await bot.send_document(
             chat_id=chat_id,
             document=file_path,
-            caption=f"<b>Upload Finished:</b> {os.path.basename(file_path)}\n<b>Size:</b> {humanbytes(os.path.getsize(file_path))}",
+            caption=f"<blockquote><b>{os.path.basename(file_path)}</b></blockquote>",
             progress=progress_for_pyrogram,
             progress_args=(
                 bot,                    # bot
