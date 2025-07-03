@@ -34,7 +34,6 @@ COPY . .
 # EXPOSE 8080
 
 # Set environment variable for debugging
-ENV PYTHONUNBUFFERED=1
 
 # Use ENTRYPOINT for consistent execution
-ENTRYPOINT ["bash", "start.sh"]
+CMD ["bash", "start.sh"]
