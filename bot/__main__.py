@@ -23,6 +23,7 @@ from bot import (
 from bot.helper_funcs.utils import add_task, on_task_complete, sysinfo
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler
 from pyrogram.types import Message
+from pyrogram import Client, filters
 from psutil import disk_usage, cpu_percent, virtual_memory, Process as psprocess
 
 from bot.plugins.incoming_message_fn import (
