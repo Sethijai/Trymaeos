@@ -36,7 +36,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
     try:
         filename = os.path.basename(video_file)
         extension = filename.split(".")[-1]
-        out_name = sanitize_filename(filename.replace(f".{extension}", "[480p].mkv"))
+        out_name = sanitize_filename(filename.replace(f".{extension}", "[480p].mp4"))
         progress = os.path.join(output_directory, "progress.txt")
         with open(progress, 'w') as f:
             pass
