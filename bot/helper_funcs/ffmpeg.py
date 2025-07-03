@@ -36,14 +36,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
     try:
         filename = os.path.basename(video_file)
         extension = filename.split(".")[-1]
-        
-        # Extract resolution for filename (e.g., "480p", "720p", etc.)
-        resolution_str = resolution[0].split("x")[1] + "p" if "x" in resolution[0] else "480p"
-        
-        # Create output filename with .mp4 extension and resolution
-        base_name = filename.replace(f".{extension}", "")
-        out_name = sanitize_filename(f"{base_name} {resolution_str}.mp4")
-        
+        out_name = sanitize_filename(filename.replace(f".{extension}","[480p].mkv"))
         progress = os.path.join(output_directory, "progress.txt")
         with open(progress, 'w') as f:
             pass
@@ -63,7 +56,6 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
             "-preset", preset[0],
             "-c:a", "libopus",
             "-b:a", audio_b[0],
-            "-f", "mp4",  # Force MP4 format
             "-y",
             os.path.join(output_directory, out_name)
         ]
@@ -132,8 +124,8 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
 
         LOGGER.info(f"Output file path: {repr(output_file)}")
 
-        # Upload to telegram with clean caption
-        await upload_to_telegram(bot, message.chat.id, output_file, message, out_name)
+        # Fix: Pass the correct arguments to upload_to_telegram
+        await upload_to_telegram(bot, message.chat.id, output_file, message)
 
         return output_file if os.path.exists(output_file) else None
 
@@ -186,7 +178,7 @@ async def take_screen_shot(video_file, output_directory, ttl):
 
 
 async def upload_to_telegram(bot, chat_id, file_path, reply_msg, filename):
-    """Clean upload function without 'Upload Finished' message"""
+    """Fixed upload function with proper progress callback arguments"""
     try:
         # Get file size for progress tracking
         file_size = os.path.getsize(file_path)
