@@ -5,7 +5,8 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Create app directory with restrictive permissions
-RUN mkdir -p /app && chmod 755 /app
+RUN mkdir ./app
+RUN chmod 777 /app
 
 # Update package lists and install dependencies in one layer
 RUN apt-get update -qq && \
