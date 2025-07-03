@@ -178,9 +178,6 @@ async def take_screen_shot(video_file, output_directory, ttl):
 
 async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
     try:
-        # Get the start time for progress tracking
-        start_time = time.time()
-        
         sent_msg = await bot.send_document(
             chat_id=chat_id,
             document=file_path,
@@ -188,15 +185,10 @@ async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
             progress=progress_for_pyrogram,
             progress_args=(
                 "Uploading...",
-                reply_msg,
-                start_time
+                reply_msg
             )
         )
         return sent_msg
     except Exception as e:
         LOGGER.error(f"Upload failed: {e}")
-        try:
-            await reply_msg.edit_text(f"❌ Upload failed!\n\n{e}")
-        except Exception as edit_error:
-            LOGGER.error(f"Failed to edit message: {edit_error}")
-        return None
+        await reply_msg.edit_text(f"❌ Upload failed!\n\n{e}")
