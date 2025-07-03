@@ -32,7 +32,7 @@ COPY . .
 # Make start.sh executable
 
 # Expose port if needed (uncomment and set appropriate port)
-# EXPOSE 8080
+EXPOSE 8080
 
 # Set environment variable for debugging
 
