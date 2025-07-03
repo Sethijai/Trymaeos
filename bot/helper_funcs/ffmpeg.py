@@ -178,17 +178,23 @@ async def take_screen_shot(video_file, output_directory, ttl):
 
 async def upload_to_telegram(bot, chat_id, file_path, reply_msg):
     try:
+        # Fix: Add the missing start time argument
+        upload_start_time = time.time()
+        
         sent_msg = await bot.send_document(
             chat_id=chat_id,
             document=file_path,
             caption=f"<b>Upload Finished:</b> {os.path.basename(file_path)}\n<b>Size:</b> {humanbytes(os.path.getsize(file_path))}",
             progress=progress_for_pyrogram,
             progress_args=(
-                "Uploading...",
-                reply_msg
+                bot,                    # bot
+                "Uploading...",         # ud_type
+                reply_msg,              # message
+                upload_start_time       # start
             )
         )
         return sent_msg
     except Exception as e:
         LOGGER.error(f"Upload failed: {e}")
         await reply_msg.edit_text(f"❌ Upload failed!\n\n{e}")
+        return None
