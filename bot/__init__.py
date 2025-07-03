@@ -2,7 +2,6 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 import time
-from pyrogram import Client
 from bot.config import Config
 
 # dont think ne dumb (c) @Yae_X_Miko
